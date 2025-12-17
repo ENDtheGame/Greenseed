@@ -6,6 +6,14 @@
     <a href="{{ route('products.create') }}" class="bg-green-600 text-white px-4 py-2 rounded">
         + Tambah Produk
     </a>
+    <form method="GET" class="mb-4">
+        <input type="text" name="search" value="{{ $search }}" placeholder="Cari produk..."
+            class="border rounded px-3 py-2 w-64">
+
+        <button class="bg-green-600 text-white px-4 py-2 rounded">
+            Cari
+        </button>
+    </form>
 
     <div class="grid grid-cols-3 gap-4 mt-4">
         @foreach ($products as $product)
@@ -28,6 +36,10 @@
                         @method('DELETE')
                         <button class="text-red-600 text-sm">Hapus</button>
                     </form>
+                    <div class="mt-6">
+                        {{ $products->links() }}
+                    </div>
+
                 </div>
             </div>
         @endforeach
