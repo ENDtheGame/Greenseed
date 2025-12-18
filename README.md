@@ -6,6 +6,7 @@ Project ini adalah **website manajemen benih tanaman** berbasis **Laravel**, dib
 
 ## ✨ Fitur Utama
 
+<<<<<<< HEAD
 -   🔐 Autentikasi (Login & Register)
 -   📊 Dashboard Admin
 -   🗂️ CRUD Kategori Benih
@@ -13,16 +14,33 @@ Project ini adalah **website manajemen benih tanaman** berbasis **Laravel**, dib
 -   🖼️ Upload & manajemen gambar produk
 -   🔗 Relasi Kategori ↔ Produk
 -   🎨 Tampilan sederhana dengan Tailwind CSS
+=======
+* 🔐 Autentikasi (Login & Register)
+* 📊 Dashboard Admin
+* 🗂️ CRUD Kategori Benih
+* 🌾 CRUD Produk Benih
+* 🖼️ Upload & manajemen gambar produk
+* 🔗 Relasi Kategori ↔ Produk
+* 🎨 Tampilan sederhana dengan Tailwind CSS
+>>>>>>> db89bb9a4daa3906f403d6b24cd18f16ef78433f
 
 ---
 
 ## 🛠️ Teknologi yang Digunakan
 
+<<<<<<< HEAD
 -   **Laravel** (Backend Framework)
 -   **MySQL** (Database)
 -   **Blade Template Engine**
 -   **Tailwind CSS**
 -   **Laravel Breeze** (Auth)
+=======
+* **Laravel** (Backend Framework)
+* **MySQL** (Database)
+* **Blade Template Engine**
+* **Tailwind CSS**
+* **Laravel Breeze** (Auth)
+>>>>>>> db89bb9a4daa3906f403d6b24cd18f16ef78433f
 
 ---
 
@@ -30,9 +48,15 @@ Project ini adalah **website manajemen benih tanaman** berbasis **Laravel**, dib
 
 > Tambahkan screenshot aplikasi di sini:
 
+<<<<<<< HEAD
 -   Dashboard Admin
 -   Halaman Kategori
 -   Halaman Produk
+=======
+* Dashboard Admin
+* Halaman Kategori
+* Halaman Produk
+>>>>>>> db89bb9a4daa3906f403d6b24cd18f16ef78433f
 
 Contoh:
 
