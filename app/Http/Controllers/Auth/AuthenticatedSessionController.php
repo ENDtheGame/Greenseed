@@ -11,6 +11,17 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
+
+    protected function authenticated(Request $request, $user)
+{
+    if ($request->user()->role === 'admin') {
+    return redirect()->intended(route('dashboard'));
+}
+// Jika bukan admin, kirim ke katalog
+return redirect()->intended(route('katalog.index'));
+    }
+
+
     /**
      * Display the login view.
      */
@@ -22,18 +33,22 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+   public function store(LoginRequest $request): RedirectResponse
+{
+    $request->authenticate();
+    $request->session()->regenerate();
 
-        $request->session()->regenerate();
+    // Ambil user
+    $user = $request->user();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+    // JANGAN pakai intended() di sini kalau mau maksa redirect berdasarkan role
+    if ($user->role === 'admin') {
+        return redirect()->route('dashboard');
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
+    return redirect()->route('katalog.index');
+}
+
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

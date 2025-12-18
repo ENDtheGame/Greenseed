@@ -1,26 +1,33 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductUserController;
+use Inertia\Inertia;
 
+// 1. GUEST
+Route::get('/', function () {
+    return view('home');
+})->name('home');
 
-
-
-
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// 2. AUTHENTICATED (ADMIN & USER)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/katalog', [ProductUserController::class, 'index'])->name('katalog.index');
 });
-Route::resource('categories', CategoryController::class);
-Route::resource('products', ProductController::class);
+
+// 3. KHUSUS ADMIN
+Route::middleware(['auth', 'admin'])->group(function () {
+    // Satu rute saja untuk dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::resource('categories', CategoryController::class);
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::post('/products/{product}/delete', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::post('/products/{product}/update', [ProductController::class, 'update'])->name('products.custom_update');
+    Route::get('/products-download', [ProductController::class, 'downloadPDF'])->name('products.pdf');
+});
 
 require __DIR__.'/auth.php';
