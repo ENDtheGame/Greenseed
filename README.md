@@ -31,13 +31,13 @@ Project ini adalah **website manajemen benih tanaman** berbasis **Laravel**, dib
 <<<<<<< HEAD
 -   **Laravel** (Backend Framework)
 -   **MySQL** (Database)
--   **Blade Template Engine**
+-   **Inertia + React**
 -   **Tailwind CSS**
 -   **Laravel Breeze** (Auth)
 =======
 * **Laravel** (Backend Framework)
 * **MySQL** (Database)
-* **Blade Template Engine**
+* **Inertia + React**
 * **Tailwind CSS**
 * **Laravel Breeze** (Auth)
 >>>>>>> db89bb9a4daa3906f403d6b24cd18f16ef78433f
@@ -58,22 +58,13 @@ Project ini adalah **website manajemen benih tanaman** berbasis **Laravel**, dib
 * Halaman Produk
 >>>>>>> db89bb9a4daa3906f403d6b24cd18f16ef78433f
 
-Contoh:
-
-```
-/screenshot/dashboard.png
-/screenshot/products.png
-```
-
----
-
 ## ⚙️ Cara Menjalankan Project
 
 ### 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/username/benih-tanaman.git
-cd benih-tanaman
+git clone https://github.com/Endthegame/Greenseed.git
+cd Greenseed
 ```
 
 ### 2️⃣ Install Dependency
@@ -81,6 +72,10 @@ cd benih-tanaman
 ```bash
 composer install
 npm install
+composer require inertiajs/inertia-laravel
+npm install react react-dom @inertiajs/react
+npm install @vitejs/plugin-react --save-dev
+
 ```
 
 ### 3️⃣ Konfigurasi Environment
@@ -94,7 +89,7 @@ cp .env.example .env
 Sesuaikan database di `.env`:
 
 ```env
-DB_DATABASE=benih_tanaman
+DB_DATABASE=Greenseed
 DB_USERNAME=root
 DB_PASSWORD=
 ```
@@ -133,7 +128,7 @@ Project ini dibuat untuk pembelajaran dan portofolio. Struktur database mengguna
 **Diki Nuralim**
 Laravel / Backend Developer
 
-📫 GitHub: [https://github.com/username](https://github.com/username)
+📫 GitHub: [https://github.com/EndtheGame](https://github.com/EndtheGame)
 
 ---
 
