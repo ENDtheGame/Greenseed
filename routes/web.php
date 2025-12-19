@@ -23,6 +23,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('categories', CategoryController::class);
+    Route::post('/admin/category', [CategoryController::class, 'store'])->name('category.store');
+    Route::delete('/admin/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::post('/products/{product}/delete', [ProductController::class, 'destroy'])->name('products.destroy');

@@ -6,21 +6,21 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\RedirectResponse;
 
 class CategoryController extends Controller
 {
     public function index()
     {
         return inertia('Categories/Index', [
-            // Pakai latest() biar kategori baru muncul di paling depan/atas
-            'categories' => Category::latest()->get(),
+            // PENTING: Tambahkan withCount('products') agar React tahu jumlah produknya
+            'categories' => Category::withCount('products')->latest()->get(),
             'auth' => [
                 'user' => auth()->user()
             ]
         ]);
     }
 
-    // Fungsi Tambah Kategori Baru
     public function store(Request $request)
     {
         $request->validate([
@@ -32,6 +32,7 @@ class CategoryController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
+        // Gunakan 'success' agar sesuai dengan useEffect di React kamu
         return back()->with('success', 'Kategori baru berhasil ditambahkan!');
     }
 
@@ -46,26 +47,32 @@ class CategoryController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
-        // Tambahkan flash success biar SweetAlert di React muncul
         return back()->with('success', 'Kategori berhasil diperbarui!');
     }
 
-public function destroy($id)
+   public function destroy($id): RedirectResponse
 {
     try {
+        // Cari kategorinya
         $category = Category::findOrFail($id);
-        $category->delete();
 
-        return redirect()->back()->with('message', 'Kategori berhasil dihapus!');
-    } catch (QueryException $e) {
-        // Cek jika error disebabkan karena data masih digunakan (Foreign Key Constraint)
-        if ($e->getCode() === "23000") {
+        // Cek apakah ada produk (keamanan berlapis)
+        if ($category->products()->count() > 0) {
             return redirect()->back()->withErrors([
-                'delete' => 'Kategori tidak bisa dihapus karena masih digunakan oleh produk lain!'
+                'delete' => 'Gagal! Kategori masih memiliki produk.'
             ]);
         }
 
-        return redirect()->back()->withErrors(['delete' => 'Terjadi kesalahan sistem.']);
+        // Proses hapus
+        $category->delete();
+
+        // Kirim flash 'success' agar SweetAlert di React muncul
+        return redirect()->back()->with('success', 'Kategori berhasil dihapus selamanya!');
+
+    } catch (\Exception $e) {
+        return redirect()->back()->withErrors([
+            'delete' => 'Terjadi kesalahan: ' . $e->getMessage()
+        ]);
     }
 }
 

@@ -1,20 +1,13 @@
 import React, { useEffect } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, router, usePage } from '@inertiajs/react';
+import { Head, router, usePage, useForm } from '@inertiajs/react';
 import { Plus, Pencil, Trash2, Tag } from 'lucide-react';
 import Swal from 'sweetalert2';
 
-// ... import tetap sama ...
-
 export default function Index(props) {
-    // Kita pecah props-nya di sini biar kelihatan mana yang masuk
     const { categories, auth, flash } = props;
 
-    // Log ini sangat penting untuk diagnosa
-    console.log("Cek seluruh Props:", props);
-
     useEffect(() => {
-        // Jika flash masih undefined di sini, berarti masalah ada di Middleware Laravel
         if (flash?.success) {
             Swal.fire({
                 title: 'Berhasil!',
@@ -25,16 +18,14 @@ export default function Index(props) {
         }
     }, [flash]);
 
-    // ... sisa kode tetap sama ...
-
-    // 1. Fungsi Tambah Kategori
+    // 1. Fungsi Tambah
     const handleAddCategory = () => {
         Swal.fire({
             title: 'Tambah Kategori Baru',
             input: 'text',
-            inputPlaceholder: 'Masukkan nama kategori...',
+            inputPlaceholder: 'Masukkan nama kategori',
             showCancelButton: true,
-            confirmButtonText: 'Simpan',
+            confirmButtonText: 'Tambah Kategori',
             confirmButtonColor: '#16a34a',
             cancelButtonText: 'Batal',
             preConfirm: (value) => {
@@ -45,20 +36,16 @@ export default function Index(props) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-              router.post(`/categories/${category.id}`, {
-    _method: 'PUT',
-    name: result.value
-}, {
-    onSuccess: () => {
-        // Biarkan kosong, ini memicu props untuk diperbarui
-    },
-    preserveScroll: true,
-});
+                router.post('/admin/category', {
+                    name: result.value
+                }, {
+                    preserveScroll: true,
+                });
             }
         });
     };
 
-    // 2. Fungsi Edit Kategori
+    // 2. Fungsi Edit
     const handleEdit = (category) => {
         Swal.fire({
             title: 'Edit Nama Kategori',
@@ -76,7 +63,6 @@ export default function Index(props) {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                // Menggunakan Method Spoofing agar stabil di semua environment
                 router.post(`/categories/${category.id}`, {
                     _method: 'PUT',
                     name: result.value
@@ -87,34 +73,39 @@ export default function Index(props) {
         });
     };
 
-    // 3. Fungsi Hapus Kategori
-    const handleDelete = (id, name) => {
-        Swal.fire({
-            title: `Hapus Kategori ${name}?`,
-            text: "Pastikan kategori tidak memiliki produk terkait.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6b7280',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                router.post(`/categories/${id}`, {
-                    _method: 'DELETE',
-                }, {
-                    preserveScroll: true,
-                });
-            }
-        });
-    };
+    // 3. Fungsi Delete
+  const handleDelete = (id) => {
+    Swal.fire({
+        title: 'Yakin hapus?',
+        text: "Data akan hilang permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Ganti route('category.destroy', id) menjadi URL manual seperti ini:
+            router.delete(`/admin/category/${id}`, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Alert sukses akan muncul otomatis via useEffect
+                },
+                onError: (errors) => {
+                    if (errors.delete) {
+                        Swal.fire('Gagal!', errors.delete, 'error');
+                    }
+                }
+            });
+        }
+    });
+};  
 
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Kategori Benih" />
 
             <div className="p-8 max-w-6xl mx-auto">
-                {/* Header Section */}
                 <div className="flex justify-between items-center mb-10">
                     <div>
                         <h1 className="text-4xl font-black text-gray-900 tracking-tight">Kategori</h1>
@@ -130,37 +121,40 @@ export default function Index(props) {
                     </button>
                 </div>
 
-                {/* Grid Kategori */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {categories.map((cat) => (
-                        <div key={cat.id} className="bg-white rounded-[2.5rem] p-2 shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 group">
+                    {categories.map((category) => ( // Pakai nama 'category' biar sinkron
+                        <div key={category.id} className="bg-white rounded-[2.5rem] p-2 shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 group">
                             <div className="p-6">
                                 <div className="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-all duration-500">
                                     <Tag size={24} />
                                 </div>
 
                                 <h3 className="text-2xl font-black text-gray-800 mb-1 capitalize">
-                                    {cat.name}
+                                    {category.name}
                                 </h3>
                                 <div className="flex items-center gap-2 text-gray-400 mb-8">
                                     <span className="text-[10px] font-black bg-gray-100 px-2 py-1 rounded-md uppercase tracking-tighter">
-                                        ID: {cat.id}
+                                        ID: {category.id}
                                     </span>
-                                    <span className="text-xs font-medium">Produk Terkait</span>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <button
-                                        onClick={() => handleEdit(cat)}
+                                        onClick={() => handleEdit(category)}
                                         className="flex items-center justify-center gap-2 bg-gray-50 hover:bg-blue-50 hover:text-blue-600 text-gray-500 py-3 rounded-xl font-bold text-sm transition-all border border-transparent"
                                     >
                                         <Pencil size={16} /> Edit
                                     </button>
+
                                     <button
-                                        onClick={() => handleDelete(cat.id, cat.name)}
-                                        className="flex items-center justify-center bg-gray-50 hover:bg-red-50 hover:text-red-600 text-gray-400 py-3 rounded-xl transition-all"
+                                        disabled={category.products_count > 0}
+                                        onClick={() => handleDelete(category.id)}
+                                        className={`flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all border border-transparent
+                                            ${category.products_count > 0
+                                                ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                                                : 'bg-red-50 text-red-500 hover:bg-red-500 hover:text-white'}`}
                                     >
-                                        <Trash2 size={18} /> Hapus
+                                        <Trash2 size={16} /> Hapus
                                     </button>
                                 </div>
                             </div>
