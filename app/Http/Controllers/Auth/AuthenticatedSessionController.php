@@ -48,15 +48,14 @@ return redirect()->intended(route('katalog.index'));
 
     return redirect()->route('katalog.index');
 }
+public function destroy(Request $request): RedirectResponse
+{
+    Auth::guard('web')->logout();
 
-    public function destroy(Request $request): RedirectResponse
-    {
-        Auth::guard('web')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return redirect('/');
-    }
+    // Redirect ke rute login yang sudah pasti menggunakan GuestLayout
+    return redirect()->route('login');
+}
 }

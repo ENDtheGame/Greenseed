@@ -18,8 +18,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // 3. KHUSUS ADMIN
-Route::middleware(['auth', 'admin'])->group(function () {
-    // Satu rute saja untuk dashboard
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('categories', CategoryController::class);
