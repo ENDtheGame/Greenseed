@@ -5,15 +5,25 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductUserController;
+use App\Http\Controllers\WelcomeController;
 use Inertia\Inertia;
 
 // 1. GUEST
+// File: routes/web.php
+
 Route::get('/', function () {
-    return view('home');
-})->name('home');
+    if (auth()->check()) {
+        // Paksa redirect ke URL yang berbeda agar Inertia mereset state
+        return auth()->user()->role === 'admin'
+            ? redirect('/dashboard')
+            : redirect('/katalog');
+    }
+    // Jika belum login, baru panggil Controller
+    return app(App\Http\Controllers\WelcomeController::class)->index();
+})->name('welcome');
 
 // 2. AUTHENTICATED (ADMIN & USER)
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/katalog', [ProductUserController::class, 'index'])->name('katalog.index');
 });
 

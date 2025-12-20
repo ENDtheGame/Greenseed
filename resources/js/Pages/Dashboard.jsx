@@ -3,7 +3,8 @@ import { Head } from '@inertiajs/react';
 import { Leaf, Box, Users, ShoppingCart } from 'lucide-react';
 
 // Hapus 'auth' dari parameter sini kalau kamu tidak memakainya di tempat lain
-export default function Dashboard({ totalProducts, totalCategories, lowStockCount }) {
+export default function Dashboard(props) {
+    const { totalProducts, totalCategories, lowStockCount } = props;
 
     const stats = [
         {
@@ -30,7 +31,8 @@ export default function Dashboard({ totalProducts, totalCategories, lowStockCoun
 
     return (
         /* CUKUP TULIS SEPERTI INI SAJA, TIDAK PERLU user={auth.user} */
-        <AuthenticatedLayout>
+        <AuthenticatedLayout auth={props.auth}
+            errors={props.errors}>
             <Head title="Dashboard" />
 
             <div className="space-y-6">
