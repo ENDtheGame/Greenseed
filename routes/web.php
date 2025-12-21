@@ -25,6 +25,8 @@ Route::get('/', function () {
 // 2. AUTHENTICATED (ADMIN & USER)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/katalog', [ProductUserController::class, 'index'])->name('katalog.index');
+    Route::put('/profile/phone', [ProductUserController::class, 'updatePhone'])->name('profile.update.phone');
+    Route::post('/track-click/{id}', [ProductUserController::class, 'trackClick'])->name('track.click');
 });
 
 // 3. KHUSUS ADMIN

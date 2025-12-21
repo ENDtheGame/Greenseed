@@ -11,10 +11,10 @@ export default function Welcome({ products }) {
  {/* Navbar Transparan */}
 <nav className="fixed top-0 w-full z-50 bg-white/10 backdrop-blur-md border-b border-white/20 shadow-sm">
     <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-green-600 font-black text-2xl drop-shadow-sm">
-            <Leaf size={30} fill="currentColor" />
-            <span>GreenSeed</span>
-        </div>
+        <div className="flex items-center gap-2 font-bold text-green-600 text-xl animate-in fade-in">
+                    <Leaf size={28} />
+                    <span>GreenSeed</span>
+                </div>
         <div className="flex gap-6">
   <a href="/login" className="font-bold text-slate-800 hover:text-green-600 my-auto drop-shadow-sm">
     Masuk
@@ -90,6 +90,9 @@ export default function Welcome({ products }) {
 </p>
 
 {/* Harga dan Stok */}
+<div className="flex justify-between items-center">
+    <span className="text-green-600 font-bold">Rp {product.price.toLocaleString()}</span>
+    </div>
 {/* Badge Stok */}
 <div className="flex gap-2 mb-2">
     {product.stock === 0 ? (
